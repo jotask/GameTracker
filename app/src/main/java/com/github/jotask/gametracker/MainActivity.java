@@ -14,7 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.igdb.api_android_java.callback.onSuccessCallback;
 import com.igdb.api_android_java.model.APIWrapper;
@@ -60,6 +62,17 @@ public class MainActivity extends LoggedActivity implements NavigationView.OnNav
 
         /////
 
+        ImageView profile_img = navigationView.getHeaderView(0).findViewById(R.id.profile_img);
+        TextView profile_name = navigationView.getHeaderView(0).findViewById(R.id.profile_name);
+        TextView profile_mail = navigationView.getHeaderView(0).findViewById(R.id.profile_mail);
+
+//        profile_img.setTag(user.getPhotoUrl());
+        new LoadImage(profile_img, user.getPhotoUrl().toString()).execute();
+        profile_name.setText(user.getDisplayName());
+        profile_mail.setText(user.getEmail());
+
+        /////
+
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -88,7 +101,7 @@ public class MainActivity extends LoggedActivity implements NavigationView.OnNav
         dataModels = new ArrayList<>();
         adapter = new CustomAdapter(dataModels, getApplicationContext());
 
-        searchGame("zelda");
+//        searchGame("zelda");
 
     }
 

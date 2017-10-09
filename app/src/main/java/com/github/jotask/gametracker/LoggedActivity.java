@@ -16,8 +16,8 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class LoggedActivity extends AppCompatActivity {
 
-    private FirebaseAuth auth;
-    private FirebaseUser user;
+    protected FirebaseAuth auth;
+    protected FirebaseUser user;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

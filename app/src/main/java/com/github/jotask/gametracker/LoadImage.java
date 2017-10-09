@@ -25,8 +25,15 @@ class LoadImage extends AsyncTask<Object, Void, Bitmap> {
     private String path;
 
     public LoadImage(ImageView imv) {
+        this(imv, null);
+    }
+
+    public LoadImage(ImageView imv, String uri) {
         this.imv = imv;
-        this.path = imv.getTag().toString();
+        if(uri == null)
+            this.path = "https://" + imv.getTag().toString();
+        else
+            this.path = uri;
     }
 
     @Override
@@ -51,12 +58,13 @@ class LoadImage extends AsyncTask<Object, Void, Bitmap> {
     }
     @Override
     protected void onPostExecute(Bitmap result) {
-        if (!imv.getTag().toString().equals(path)) {
-               /* The path is not same. This means that this
-                  image view is handled by some other async task.
-                  We don't do anything and return. */
-            return;
-        }
+        // TODO fix this comment line
+//        if (!imv.getTag().toString().equals(path)) {
+//               /* The path is not same. This means that this
+//                  image view is handled by some other async task.
+//                  We don't do anything and return. */
+//            return;
+//        }
 
         if(result != null && imv != null){
             imv.setVisibility(View.VISIBLE);

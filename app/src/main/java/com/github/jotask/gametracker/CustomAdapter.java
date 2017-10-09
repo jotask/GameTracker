@@ -92,7 +92,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
         viewHolder.txtName.setText(dataModel.getName());
 
-        String url = "https://" + dataModel.getCover_url();
+        String url = dataModel.getCover_url();
         viewHolder.imgView.setTag(url);
         new LoadImage(viewHolder.imgView).execute();
 
