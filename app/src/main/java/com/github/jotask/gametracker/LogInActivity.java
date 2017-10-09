@@ -24,6 +24,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
+
+    // FIXME fix this activity
+
     public static final String TAG = "LogIn";
     private static final int RC_SIGN_IN = 9001;
 

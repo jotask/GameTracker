@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.github.jotask.gametracker.sections.Aiko;
+import com.github.jotask.gametracker.sections.ExploreGames;
 import com.github.jotask.gametracker.sections.Joto;
 import com.github.jotask.gametracker.sections.Kimo;
 import com.google.firebase.FirebaseApp;
@@ -22,11 +22,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    protected FirebaseAuth auth;
-    protected FirebaseUser user;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
 
-    protected Toolbar toolbar;
-    protected NavigationView navigationView;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseApp.initializeApp(this);
 
         this.auth = FirebaseAuth.getInstance();
-        this.user = auth.getCurrentUser();
+        this.user = this.auth.getCurrentUser();
 
         if(this.user == null)
         {
@@ -50,16 +50,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         this.toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(this.toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, this.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         this.navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        this.navigationView.setNavigationItemSelectedListener(this);
 
         onNavigationItemSelected(this.navigationView.getMenu().getItem(0));
 
@@ -93,7 +93,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_settings) {
             return true;
         }
-
+        switch(id){
+            case R.id.action_settings:
+                return true;
+            case R.id.action_logout:
+                auth.signOut();
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -107,13 +113,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id){
             case R.id.nav_library:
-                fragment = new Aiko();
-                break;
-            case R.id.nav_explore:
                 fragment = new Joto();
                 break;
-            case R.id.nav_gallery:
+            case R.id.nav_groups:
                 fragment = new Kimo();
+                break;
+            case R.id.nav_explore:
+                fragment = new ExploreGames();
                 break;
         }
 
