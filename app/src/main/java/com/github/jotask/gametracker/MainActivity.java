@@ -1,107 +1,67 @@
 package com.github.jotask.gametracker;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import com.android.volley.VolleyError;
-import com.igdb.api_android_java.callback.onSuccessCallback;
-import com.igdb.api_android_java.model.APIWrapper;
-import com.igdb.api_android_java.model.Parameters;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.github.jotask.gametracker.sections.Aiko;
+import com.github.jotask.gametracker.sections.Joto;
+import com.github.jotask.gametracker.sections.Kimo;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-public class MainActivity extends LoggedActivity implements NavigationView.OnNavigationItemSelectedListener {
+    protected FirebaseAuth auth;
+    protected FirebaseUser user;
 
-    protected static final String KEY = "1adb0a2cdf042857fc6f6cc7c4a8971f";
-
-    ArrayList<DataModel> dataModels;
-    ListView listView;
-    private static CustomAdapter adapter;
+    protected Toolbar toolbar;
+    protected NavigationView navigationView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        FirebaseApp.initializeApp(this);
+
+        this.auth = FirebaseAuth.getInstance();
+        this.user = auth.getCurrentUser();
+
+        if(this.user == null)
+        {
+            // Not logged in, launch the Log In activity
+            // This prevents the user going back to the main activity when they press the Back button from the login view.
+            Intent intent = new Intent(this, LogInActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
+        setContentView(R.layout.activity_main);
+
+        this.toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        this.navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /////
-
-        ImageView profile_img = navigationView.getHeaderView(0).findViewById(R.id.profile_img);
-        TextView profile_name = navigationView.getHeaderView(0).findViewById(R.id.profile_name);
-        TextView profile_mail = navigationView.getHeaderView(0).findViewById(R.id.profile_mail);
-
-//        profile_img.setTag(user.getPhotoUrl());
-        new LoadImage(profile_img, user.getPhotoUrl().toString()).execute();
-        profile_name.setText(user.getDisplayName());
-        profile_mail.setText(user.getEmail());
-
-        /////
-
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if(s.length() > 3)
-//                    searchGame(s.toString());
-                listView.setAdapter(null);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        };
-
-        EditText search = findViewById(R.id.search_game);
-        search.addTextChangedListener(textWatcher);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-        listView = (ListView)findViewById(R.id.list);
-
-        dataModels = new ArrayList<>();
-        adapter = new CustomAdapter(dataModels, getApplicationContext());
-
-//        searchGame("zelda");
+        onNavigationItemSelected(this.navigationView.getMenu().getItem(0));
 
     }
 
@@ -143,91 +103,31 @@ public class MainActivity extends LoggedActivity implements NavigationView.OnNav
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        Fragment fragment = null;
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (id){
+            case R.id.nav_library:
+                fragment = new Aiko();
+                break;
+            case R.id.nav_explore:
+                fragment = new Joto();
+                break;
+            case R.id.nav_gallery:
+                fragment = new Kimo();
+                break;
         }
+
+        if(fragment == null){
+            return false;
+        }
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_main, fragment);
+        ft.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private DataModel jsonToDataModel(JSONObject obj) throws JSONException {
-        String name = obj.getString("name");
-        String cover = obj.getJSONObject("cover").getString("url");
-        cover = cover.substring(2);
-        return new DataModel(name, cover);
-    }
-
-    private void searchGame(String name) {
-
-        System.out.println("-------------------------------------------------" + "Searching: " + name);
-
-        adapter.restart();
-        adapter.notifyDataSetChanged();
-
-        APIWrapper wrapper = new APIWrapper(this, KEY);
-
-        Parameters params = new Parameters()
-                .addSearch(name)
-                .addFields("name,cover");
-
-        wrapper.games(params, new onSuccessCallback(){
-            @Override
-            public void onSuccess(JSONArray result) {
-                System.out.println("---------------------------------------" + result.length());
-                for(int i = 0; i < result.length(); i++) {
-                    JSONObject obj;
-                    try {
-                        obj = result.getJSONObject(i);
-                    } catch (JSONException e) {
-                        System.err.println("--------------------------- one");
-                        continue;
-                    }
-                    DataModel model;
-                    try {
-                        model = jsonToDataModel(obj);
-                    } catch (JSONException e) {
-                        System.err.println("--------------------------- two");
-                        continue;
-                    }
-                    dataModels.add(model);
-                }
-                listView.invalidateViews();
-            }
-
-            @Override
-            public void onError(VolleyError error) {
-                // Do something on error
-            }
-
-        });
-
-        listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                DataModel dataModel= dataModels.get(position);
-//
-//                Snackbar.make(view, dataModel.getName(), Snackbar.LENGTH_LONG)
-//                        .setAction("No action", null).show();
-//            }
-//        });
-
-
-        adapter.notifyDataSetChanged();
-
     }
 
 }

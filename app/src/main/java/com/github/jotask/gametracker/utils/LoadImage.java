@@ -1,4 +1,4 @@
-package com.github.jotask.gametracker;
+package com.github.jotask.gametracker.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
