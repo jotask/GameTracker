@@ -13,11 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.github.jotask.gametracker.firebase.FireBaseController;
 import com.github.jotask.gametracker.igdb.ApiSearch;
 import com.github.jotask.gametracker.sections.ExploreGames;
 import com.github.jotask.gametracker.sections.GameProfile;
 import com.github.jotask.gametracker.sections.Joto;
 import com.github.jotask.gametracker.sections.Kimo;
+import com.github.jotask.gametracker.utils.LoadImage;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     private ApiSearch api;
+    private FireBaseController firebase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,12 +69,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         this.navigationView = findViewById(R.id.nav_view);
         this.navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+
+        TextView name = header.findViewById(R.id.profile_name);
+        name.setText(this.auth.getCurrentUser().getDisplayName());
+        TextView mail = header.findViewById(R.id.profile_mail);
+        mail.setText(this.auth.getCurrentUser().getEmail());
+        ImageView img = header.findViewById(R.id.profile_img);
+        new LoadImage(img, this.auth.getCurrentUser().getPhotoUrl().toString()).execute();
 
         this.api = new ApiSearch(this);
+        this.firebase = new FireBaseController();
 
-//        onNavigationItemSelected(this.navigationView.getMenu().getItem(2));
+        onNavigationItemSelected(this.navigationView.getMenu().getItem(2));
 
-        setTest();
+//        setTest();
 
     }
 

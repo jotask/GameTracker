@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.*;
 
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -161,6 +162,29 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 //                        String name = getdata();
 
                         if (task.isSuccessful()){
+
+//                            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                            DatabaseReference ref = database.getReference("users");
+//                            ref.child(auth.getCurrentUser().getUid()).
+
+                            DatabaseReference root = FirebaseDatabase.getInstance().getReference();
+                            final DatabaseReference users = root.child("users");
+                            users.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    if (snapshot.child(auth.getCurrentUser().getUid()).exists()) {
+                                        // run some code
+                                        return;
+                                    }else{
+                                        users.setValue(auth.getCurrentUser().getUid());
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) { }
+
+                            });
+
                             Intent intent = new Intent(instace, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
