@@ -13,7 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.github.jotask.gametracker.igdb.ApiSearch;
 import com.github.jotask.gametracker.sections.ExploreGames;
+import com.github.jotask.gametracker.sections.GameProfile;
 import com.github.jotask.gametracker.sections.Joto;
 import com.github.jotask.gametracker.sections.Kimo;
 import com.google.firebase.FirebaseApp;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private NavigationView navigationView;
 
+    private ApiSearch api;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.auth = FirebaseAuth.getInstance();
         this.user = this.auth.getCurrentUser();
 
-        if(this.user == null)
-        {
+        if(this.user == null) {
             // Not logged in, launch the Log In activity
             // This prevents the user going back to the main activity when they press the Back button from the login view.
             Intent intent = new Intent(this, LogInActivity.class);
@@ -61,7 +64,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.navigationView = findViewById(R.id.nav_view);
         this.navigationView.setNavigationItemSelectedListener(this);
 
-        onNavigationItemSelected(this.navigationView.getMenu().getItem(0));
+        this.api = new ApiSearch(this);
+
+//        onNavigationItemSelected(this.navigationView.getMenu().getItem(2));
+
+        setTest();
 
     }
 
@@ -98,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             case R.id.action_logout:
                 auth.signOut();
+                finish();
+                startActivity(getIntent());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -135,5 +144,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    void setTest(){
+        String gameID = "1074";
+        Fragment fragment = GameProfile.newInstance(gameID);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_main, fragment);
+        ft.commit();
+
+    }
+
+    public ApiSearch getApi() { return api; }
 
 }

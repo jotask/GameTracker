@@ -24,7 +24,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-
     // FIXME fix this activity
 
     public static final String TAG = "LogIn";
@@ -91,7 +90,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (requestCode == RC_SIGN_IN){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()){
-                System.out.println("--------------------------------------- onactivityresult");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             }else{
@@ -150,28 +148,23 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
-//        System.out.println("-----------------------------------------------");
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         Toast.makeText(LogInActivity.this,""+credential.getProvider(),Toast.LENGTH_LONG).show();
+
+        final LogInActivity instace = this;
 
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 //                        String name = getdata();
 
                         if (task.isSuccessful()){
-//                            sign_out.setVisibility(View.VISIBLE);
-//                            signin.setVisibility(View.GONE);
-//                            tvname.setText("Welcome "+name);
-
-                            Toast.makeText(LogInActivity.this,"Aaaaron is working",Toast.LENGTH_LONG).show();
-
+                            Intent intent = new Intent(instace, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                         }else {
                             Toast.makeText(LogInActivity.this,"Something went wrong",Toast.LENGTH_LONG).show();
                         }

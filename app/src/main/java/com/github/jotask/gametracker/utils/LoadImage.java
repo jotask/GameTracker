@@ -19,21 +19,15 @@ import java.net.URLConnection;
  * @author Jose Vives Iznardo
  * @since 08/10/2017
  */
-class LoadImage extends AsyncTask<Object, Void, Bitmap> {
+public class LoadImage extends AsyncTask<Object, Void, Bitmap> {
 
     private ImageView imv;
     private String path;
 
-    public LoadImage(ImageView imv) {
-        this(imv, null);
-    }
-
     public LoadImage(ImageView imv, String uri) {
         this.imv = imv;
-        if(uri == null)
-            this.path = "https://" + imv.getTag().toString();
-        else
-            this.path = uri;
+        this.path = uri;
+        System.out.println(this.path);
     }
 
     @Override

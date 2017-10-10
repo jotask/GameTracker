@@ -5,15 +5,44 @@
              tools:context="com.github.jotask.gametracker.sections.Aiko">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Aiko"
-            android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-            android:textSize="36sp"/>
 
 
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:ems="10"
+                        android:id="@+id/search_inbox"
+                        android:layout_weight="1"
+                        android:textAlignment="textStart"
+                        android:hint="Enter game name"/>
+
+                <Button
+                        android:layout_height="wrap_content"
+                        android:id="@+id/search_button"
+                        android:drawableLeft="@android:drawable/ic_menu_search"
+                        android:layout_width="50dp"/>
+            </LinearLayout>
+
+            <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/search_result"/>
+
+        </LinearLayout>
+    </RelativeLayout>
 </FrameLayout>
