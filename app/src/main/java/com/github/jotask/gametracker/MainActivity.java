@@ -19,9 +19,9 @@ import android.widget.TextView;
 import com.github.jotask.gametracker.firebase.FireBaseController;
 import com.github.jotask.gametracker.igdb.ApiSearch;
 import com.github.jotask.gametracker.sections.ExploreGames;
+import com.github.jotask.gametracker.sections.Friends;
 import com.github.jotask.gametracker.sections.GameProfile;
-import com.github.jotask.gametracker.sections.Joto;
-import com.github.jotask.gametracker.sections.Kimo;
+import com.github.jotask.gametracker.sections.Library;
 import com.github.jotask.gametracker.utils.LoadImage;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,13 +30,13 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth auth;
-    private FirebaseUser user;
 
     private Toolbar toolbar;
     private NavigationView navigationView;
 
     private ApiSearch api;
     private FireBaseController firebase;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,15 +45,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseApp.initializeApp(this);
 
         this.auth = FirebaseAuth.getInstance();
-        this.user = this.auth.getCurrentUser();
 
-        if(this.user == null) {
+        if(this.auth.getCurrentUser() == null) {
             // Not logged in, launch the Log In activity
             // This prevents the user going back to the main activity when they press the Back button from the login view.
             Intent intent = new Intent(this, LogInActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            return;
         }
 
         setContentView(R.layout.activity_main);
@@ -71,19 +71,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
 
+        this.user = this.auth.getCurrentUser();
+
         TextView name = header.findViewById(R.id.profile_name);
-        name.setText(this.auth.getCurrentUser().getDisplayName());
+        name.setText(this.user.getDisplayName());
         TextView mail = header.findViewById(R.id.profile_mail);
-        mail.setText(this.auth.getCurrentUser().getEmail());
+        mail.setText(this.user.getEmail());
         ImageView img = header.findViewById(R.id.profile_img);
-        new LoadImage(img, this.auth.getCurrentUser().getPhotoUrl().toString()).execute();
+        new LoadImage(img, this.user.getPhotoUrl().toString()).execute();
 
         this.api = new ApiSearch(this);
         this.firebase = new FireBaseController();
 
-        onNavigationItemSelected(this.navigationView.getMenu().getItem(2));
-
-//        setTest();
+        onNavigationItemSelected(this.navigationView.getMenu().getItem(1));
 
     }
 
@@ -120,8 +120,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             case R.id.action_logout:
                 auth.signOut();
-                finish();
-                startActivity(getIntent());
+                Intent intent = new Intent(this, LogInActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -137,10 +139,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id){
             case R.id.nav_library:
-                fragment = new Joto();
+                fragment = new Library();
                 break;
             case R.id.nav_groups:
-                fragment = new Kimo();
+                fragment = new Friends();
                 break;
             case R.id.nav_explore:
                 fragment = new ExploreGames();
@@ -171,5 +173,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public ApiSearch getApi() { return api; }
+    public FireBaseController getFirebase() { return firebase; }
 
 }

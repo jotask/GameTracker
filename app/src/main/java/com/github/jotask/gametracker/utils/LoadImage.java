@@ -27,7 +27,6 @@ public class LoadImage extends AsyncTask<Object, Void, Bitmap> {
     public LoadImage(ImageView imv, String uri) {
         this.imv = imv;
         this.path = uri;
-        System.out.println(this.path);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class ApiSearch {
         return new DataModel(id, name, cover);
     }
 
-    public void searchGame(final String name, final Handler handler) {
+    public void searchGames(final String name, final Handler handler) {
 
         final ArrayList<DataModel> dataModels = new ArrayList<>();
 
@@ -77,10 +77,60 @@ public class ApiSearch {
 
     }
 
+    public void searchGamesbyId(ArrayList<String> games, final Handler handler) {
+
+        final ArrayList<DataModel> dataModels = new ArrayList<>();
+
+        final StringBuilder sb = new StringBuilder();
+
+        for(final String tmp: games) {
+            sb.append(tmp + ",");
+        }
+
+        final String tmp = sb.toString();
+
+        final String query = tmp.substring(0, tmp.length() - 1);
+
+        Parameters params = new Parameters()
+                .addIds(query)
+                .addFields("id, name,cover");
+
+        wrapper.games(params, new onSuccessCallback(){
+            @Override
+            public void onSuccess(JSONArray result) {
+
+                System.out.println(result.toString());
+
+                for(int i = 0; i < result.length(); i++) {
+                    JSONObject obj;
+                    try {
+                        obj = result.getJSONObject(i);
+                    } catch (JSONException e) { continue; }
+                    DataModel model;
+                    try {
+                        model = jsonToDataModel(obj);
+                    } catch (JSONException e) { continue; }
+                    dataModels.add(model);
+
+                    // Send the result to handle
+                    Message msg = handler.obtainMessage(1, dataModels);
+                    handler.sendMessage(msg);
+
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {  /* Do something on error*/ }
+
+        });
+
+    }
+
     public void getGameData(final GameProfile profile){
 
         Parameters params = new Parameters()
-                .addIds(profile.getGameID());
+                .addSearch(profile.getGameID())
+                .addFields("id, name,cover");
 
         wrapper.games(params, new onSuccessCallback(){
             @Override

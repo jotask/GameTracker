@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import com.github.jotask.gametracker.model.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -17,10 +18,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -121,18 +119,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-//    private void revokeAccess() {
-//        Auth.GoogleSignInApi.revokeAccess(this.googleApiClient).setResultCallback(
-//                new ResultCallback<Status>() {
-//                    @Override
-//                    public void onResult(Status status) {
-//                        // [START_EXCLUDE]
-////                        updateUI(false);
-//                        // [END_EXCLUDE]
-//                    }
-//                });
-//    }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
@@ -150,7 +136,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        Toast.makeText(LogInActivity.this,""+credential.getProvider(),Toast.LENGTH_LONG).show();
+//        Toast.makeText(LogInActivity.this,""+credential.getProvider(),Toast.LENGTH_LONG).show();
 
         final LogInActivity instace = this;
 
@@ -159,24 +145,21 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-//                        String name = getdata();
-
                         if (task.isSuccessful()){
-
-//                            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-//                            DatabaseReference ref = database.getReference("users");
-//                            ref.child(auth.getCurrentUser().getUid()).
 
                             DatabaseReference root = FirebaseDatabase.getInstance().getReference();
                             final DatabaseReference users = root.child("users");
                             users.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
-                                    if (snapshot.child(auth.getCurrentUser().getUid()).exists()) {
-                                        // run some code
+                                    if (snapshot.hasChild(auth.getCurrentUser().getUid())) {
+                                        // User exist in firebase database
                                         return;
                                     }else{
-                                        users.setValue(auth.getCurrentUser().getUid());
+                                        // User doesn't exist create user in our database
+                                        FirebaseUser fu = auth.getCurrentUser();
+                                        User u = new User(fu.getUid(), fu.getDisplayName(), fu.getPhotoUrl().toString());
+                                        users.child(auth.getCurrentUser().getUid()).setValue(u);
                                     }
                                 }
 

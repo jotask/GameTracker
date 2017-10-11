@@ -7,13 +7,12 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import com.github.jotask.gametracker.MainActivity;
 import com.github.jotask.gametracker.R;
 import com.github.jotask.gametracker.igdb.ApiSearch;
@@ -22,10 +21,8 @@ import com.github.jotask.gametracker.utils.CustomAdapter;
 
 import java.util.ArrayList;
 
-public class ExploreGames extends Fragment {
+public class Library extends Fragment {
 
-    private Button button;
-    private EditText editText;
     private ListView listView;
 
     private CustomAdapter adapter;
@@ -46,7 +43,7 @@ public class ExploreGames extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getActivity().setTitle("Add games to your library");
+        getActivity().setTitle("Library");
 
         this.main = (MainActivity) getActivity();
         this.api = main.getApi();
@@ -56,23 +53,9 @@ public class ExploreGames extends Fragment {
         LayoutInflater li = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ftView = li.inflate(R.layout.footer_view, null);
 
-        this.handler = new MyHandle();
+        this.handler = new Library.MyHandle();
 
-        this.button = getView().findViewById(R.id.search_button);
-        this.editText = getView().findViewById(R.id.search_inbox);
         this.listView = getView().findViewById(R.id.search_result);
-
-        this.editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
-            @Override
-            public void afterTextChanged(Editable s) { isDifferent = true; }
-
-        });
 
         this.adapter = new CustomAdapter(this.getContext(), this.models);
         this.listView.setAdapter(this.adapter);
@@ -87,22 +70,22 @@ public class ExploreGames extends Fragment {
             }
         });
 
-        this.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(editText.length() > 3 && isDifferent) {
-                    isDifferent = false;
-                    api.searchGames(editText.getText().toString(), handler);
-                    adapter.clearData();
-                    adapter.addData(models);
-                }
-
-                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
-            }
-        });
+//        this.button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if(editText.length() > 3 && isDifferent) {
+//                    isDifferent = false;
+//                    api.searchGame(editText.getText().toString(), handler);
+//                    adapter.clearData();
+//                    adapter.addData(models);
+//                }
+//
+//                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//
+//            }
+//        });
 
         this.listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -114,17 +97,20 @@ public class ExploreGames extends Fragment {
                 if(view.getLastVisiblePosition() == totalItemCount - 1 && !isLoading && listView.getCount() >= 7 && isDifferent){
                     isDifferent = false;
                     isLoading = true;
-                    Thread thread = new ThreadGetModeData();
+                    Thread thread = new Library.ThreadGetModeData();
                     thread.start();
                 }
             }
         });
 
+        // Load all my library
+        main.getFirebase().getAllGamesSubscribed(this.handler);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_exploregames, container, false);
+        return inflater.inflate(R.layout.fragment_library, container, false);
     }
 
     public class MyHandle extends Handler{
@@ -132,14 +118,20 @@ public class ExploreGames extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0:
-                    // add loading view during searching
+                    // add loading viewduring searching
                     listView.addFooterView(ftView);
                     break;
                 case 1:
                     // Update data adapter and ui
+                    adapter.clearData();
                     adapter.addData((ArrayList<DataModel>) msg.obj);
                     listView.removeFooterView(ftView);
                     isLoading = false;
+                    break;
+                case 2:
+                    // Received all games in library
+                    ArrayList<String> tmp = (ArrayList<String>) msg.obj;
+                    main.getApi().searchGamesbyId(tmp, handler);
                     break;
                 default:
                     break;
@@ -154,7 +146,7 @@ public class ExploreGames extends Fragment {
             handler.sendEmptyMessage(0);
 
             // Search more data
-            api.searchGames(editText.getText().toString(), handler);
+//            api.searchGame(editText.getText().toString(), handler);
 
 //            // Delay time to show loading
 //            try {

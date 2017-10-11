@@ -70,24 +70,13 @@
                             android:orientation="vertical"
                             android:layout_marginBottom="20dp"
                             android:background="#77555555">
-                        <ImageView
-                                android:layout_weight="1"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_gravity="center"
-                                android:gravity="bottom"
-                                app:srcCompat="@android:drawable/ic_input_add"/>
-                        <TextView
-                                android:gravity="center"
-                                android:layout_weight="1"
-                                android:id="@+id/sinn"
+
+                        <Button
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="Add To My List"
-                                android:layout_gravity="center"
-                                android:textSize="12dp"
-                                android:textColor="@color/colorAccent"
-                                />
+                                android:layout_height="wrap_content"
+                                android:id="@+id/game_profile_subscribe_btn"
+                                android:text="Subscribe"
+                                android:textAlignment="center"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

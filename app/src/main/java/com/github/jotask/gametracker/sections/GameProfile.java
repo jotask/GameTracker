@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.jotask.gametracker.MainActivity;
@@ -22,7 +23,8 @@ public class GameProfile extends Fragment {
     TextView name;
     ImageView cover;
 
-    public GameProfile() { }
+    public GameProfile() {
+    }
 
     public static GameProfile newInstance(String gameID) {
         GameProfile fragment = new GameProfile();
@@ -50,7 +52,17 @@ public class GameProfile extends Fragment {
         this.name = getView().findViewById(R.id.game_profile_name);
         this.cover = getView().findViewById(R.id.game_profile_cover);
 
-        ((MainActivity) getActivity()).getApi().getGameData(this);
+        final MainActivity main = ((MainActivity) getActivity());
+
+        final Button btn = getView().findViewById(R.id.game_profile_subscribe_btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.getFirebase().subscribeToGame(gameID);
+            }
+        });
+
+        main.getApi().getGameData(this);
 
     }
 
