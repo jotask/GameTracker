@@ -8,9 +8,9 @@ package com.github.jotask.gametracker.igdb;
  */
 public class DataModel {
 
-    String id;
-    String name;
-    String cover_url;
+    public String id;
+    public String name;
+    public String cover_url;
 
     public DataModel(String id,String name, String cover_url) {
         this.id = id;

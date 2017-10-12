@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.github.jotask.gametracker.model.User;
+import com.github.jotask.gametracker.utils.Utils;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -158,7 +159,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                                     }else{
                                         // User doesn't exist create user in our database
                                         FirebaseUser fu = auth.getCurrentUser();
-                                        User u = new User(fu.getUid(), fu.getDisplayName(), fu.getPhotoUrl().toString());
+                                        User u = new User();
+                                        u.uid = fu.getUid();
+                                        u.name = fu.getDisplayName();
+                                        u.photo = Utils.removeHTTPS(fu.getPhotoUrl().toString());
                                         users.child(auth.getCurrentUser().getUid()).setValue(u);
                                     }
                                 }
@@ -172,6 +176,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
+
                         }else {
                             Toast.makeText(LogInActivity.this,"Something went wrong",Toast.LENGTH_LONG).show();
                         }

@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.api = new ApiSearch(this);
         this.firebase = new FireBaseController();
 
-        onNavigationItemSelected(this.navigationView.getMenu().getItem(1));
+        onNavigationItemSelected(this.navigationView.getMenu().getItem(0));
 
     }
 

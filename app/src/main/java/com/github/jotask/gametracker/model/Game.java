@@ -8,11 +8,10 @@ package com.github.jotask.gametracker.model;
  */
 public class Game {
 
-    public final String id;
+    public String id;
 
     public boolean completed = false;
 
-    public Game(String id) {
-        this.id = id;
-    }
+    public Game() { }
+
 }

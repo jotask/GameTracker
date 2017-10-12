@@ -12,9 +12,6 @@ public class User {
     public String name;
     public String photo;
 
-    public User(String uid, String name, String photo) {
-        this.uid = uid;
-        this.name = name;
-        this.photo = photo;
-    }
+    public User() {}
+
 }
