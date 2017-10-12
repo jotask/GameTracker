@@ -83,9 +83,8 @@ public class ApiSearch {
 
         final StringBuilder sb = new StringBuilder();
 
-        for(final String tmp: games) {
+        for(final String tmp: games)
             sb.append(tmp + ",");
-        }
 
         final String tmp = sb.toString();
 
@@ -93,7 +92,7 @@ public class ApiSearch {
 
         Parameters params = new Parameters()
                 .addIds(query)
-                .addFields("id, name,cover");
+                .addFields("id, name, cover");
 
         wrapper.games(params, new onSuccessCallback(){
             @Override
@@ -102,7 +101,8 @@ public class ApiSearch {
                 System.out.println(result.toString());
 
                 for(int i = 0; i < result.length(); i++) {
-                    JSONObject obj;
+
+                    JSONObject obj = null;
                     try {
                         obj = result.getJSONObject(i);
                     } catch (JSONException e) { continue; }
@@ -129,8 +129,8 @@ public class ApiSearch {
     public void getGameData(final GameProfile profile){
 
         Parameters params = new Parameters()
-                .addSearch(profile.getGameID())
-                .addFields("id, name,cover");
+                .addIds(profile.getGameID())
+                .addFields("id, name, cover");
 
         wrapper.games(params, new onSuccessCallback(){
             @Override
