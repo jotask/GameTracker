@@ -101,6 +101,49 @@ public class FireBaseController {
 
     }
 
+    public void getGameData(final String gameId, final Handler handler) {
+
+        final DatabaseReference ref = this.database.getReference( ).
+                child(TABLES.GAMES.name().toLowerCase()).child(user.getUid()).child(gameId);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // TODO add error handler
+
+                    final Game game;
+
+                    if(!dataSnapshot.exists()){
+                        game = new Game();
+                        game.id = gameId;
+
+                        ref.setValue(game);
+
+                        System.out.println("********** created because doesm't exist");
+
+                    }else{
+
+//                            if(!(dataSnapshot.getValue() instanceof Game)){
+//                                throw new RuntimeException("Is not instance of game: instance of: " + dataSnapshot.getValue().getClass().getSimpleName());
+//                            }
+
+                        game = dataSnapshot.getValue(Game.class);
+
+                    }
+
+                    // Send the result to handle
+                    Message msg = handler.obtainMessage(1, game);
+                    handler.sendMessage(msg);
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) { }
+
+            });
+
+    }
+
     public void subscribeToGame(final String uid_game) {
         // Ok
         final Game game = new Game();
@@ -109,6 +152,15 @@ public class FireBaseController {
         ref.child(TABLES.GAMES.name().toLowerCase())
                 .child(this.user.getUid())
                 .child(game.id).setValue(game);
+    }
+
+
+    public void updateGameUser(final Game gameUser) {
+        final DatabaseReference ref = this.database.getReference()
+                .child(TABLES.GAMES.name().toLowerCase())
+                .child(user.getUid())
+                .child(gameUser.id);
+        ref.setValue(gameUser);
     }
 
 }

@@ -18,7 +18,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/common_google_signin_btn_text_dark_normal_background"
-                    android:scaleType="centerCrop"
+                    android:scaleType="center"
                     android:layout_marginBottom="25dp"
                     android:id="@+id/game_profile_cover"
                     app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
@@ -69,11 +69,11 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:layout_marginBottom="20dp"
-                            android:background="#77555555">
+                            >
 
                         <Button
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:id="@+id/game_profile_subscribe_btn"
                                 android:text="Subscribe"
                                 android:textAlignment="center"/>
@@ -81,37 +81,14 @@
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
+
         <LinearLayout
                 android:id="@+id/linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_alignParentBottom="true">
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
 
-                <TextView
-                        android:layout_weight="1"
-                        android:id="@+id/game_profile_id"
-                        android:textSize="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Sam Enric"
-                        android:textColorHint="#181737"
-                        android:textColor="#181737"
-                        android:maxLength="12"
-                        android:background="#0000"
-                        android:padding="16dp"
-                        android:gravity="right"
-                        android:textAlignment="center"/>
-            </LinearLayout>
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#dad8d8"/>
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -146,32 +123,15 @@
                     >
                 <TextView
                         android:layout_weight="1"
-                        android:id="@+id/pswrd"
-                        android:textSize="16dp"
+                        android:id="@+id/game_profile_dsc"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Password"
+                        android:layout_height="match_parent"
                         android:textColor="#a2a1b8"
-                        android:maxLength="12"
                         android:background="#0000"
                         android:padding="16dp"
-                        android:gravity="left"
+                        android:gravity="center"
                         />
-                <TextView
-                        android:layout_weight="1"
-                        android:id="@+id/pswrdd"
-                        android:textSize="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColorHint="#1b193b"
-                        android:inputType="textPassword"
-                        android:hint="**********"
-                        android:textColor="#181737"
-                        android:maxLength="12"
-                        android:background="#0000"
-                        android:padding="16dp"
-                        android:gravity="right"
-                        />
+
             </LinearLayout>
             <View
                     android:layout_width="match_parent"

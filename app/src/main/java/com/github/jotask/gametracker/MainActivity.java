@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.jotask.gametracker.firebase.FireBaseController;
 import com.github.jotask.gametracker.igdb.ApiSearch;
+import com.github.jotask.gametracker.settings.SettingsActivity;
 import com.github.jotask.gametracker.sections.ExploreGames;
 import com.github.jotask.gametracker.sections.Friends;
 import com.github.jotask.gametracker.sections.GameProfile;
@@ -112,11 +113,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
         switch(id){
             case R.id.action_settings:
+                System.out.println("----------------------------------------------------2 ");
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_logout:
                 auth.signOut();

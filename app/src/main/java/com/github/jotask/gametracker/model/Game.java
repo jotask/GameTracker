@@ -12,6 +12,11 @@ public class Game {
 
     public boolean completed = false;
 
-    public Game() { }
+    public long start = -1;
+    public long end = -1;
+
+    public Game() {
+
+    }
 
 }

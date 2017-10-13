@@ -17,6 +17,7 @@ import com.github.jotask.gametracker.MainActivity;
 import com.github.jotask.gametracker.R;
 import com.github.jotask.gametracker.igdb.ApiSearch;
 import com.github.jotask.gametracker.igdb.DataModel;
+import com.github.jotask.gametracker.sections.profile.GameUser;
 import com.github.jotask.gametracker.utils.CustomAdapter;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class Library extends Fragment {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Fragment fragment = GameProfile.newInstance(view.getTag().toString());
+                final Fragment fragment = GameUser.newInstance(view.getTag().toString());
                 FragmentTransaction ft = main.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.content_main, fragment);
                 ft.commit();
@@ -126,6 +127,12 @@ public class Library extends Fragment {
                     adapter.clearData();
                     adapter.addData((ArrayList<DataModel>) msg.obj);
                     listView.removeFooterView(ftView);
+
+                    System.out.println(((ArrayList<DataModel>) msg.obj).size() + " :::::::::::::::::::::::::::::::::::::::::::::::::");
+
+                    int id = 0;
+                    listView.performItemClick(listView.getAdapter().getView(id, null, null), id, listView.getItemIdAtPosition(id));
+
                     isLoading = false;
                     break;
                 case 2:

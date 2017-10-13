@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.jotask.gametracker.MainActivity;
 import com.github.jotask.gametracker.R;
+import com.github.jotask.gametracker.igdb.FullGame;
 import com.github.jotask.gametracker.utils.LoadImage;
 
 public class GameProfile extends Fragment {
@@ -19,7 +20,7 @@ public class GameProfile extends Fragment {
 
     private String gameID;
 
-    TextView id;
+    TextView dsc;
     TextView name;
     ImageView cover;
 
@@ -48,7 +49,7 @@ public class GameProfile extends Fragment {
 
         getActivity().setTitle(getGameID());
 
-        this.id = getView().findViewById(R.id.game_profile_id);
+        this.dsc = getView().findViewById(R.id.game_profile_dsc);
         this.name = getView().findViewById(R.id.game_profile_name);
         this.cover = getView().findViewById(R.id.game_profile_cover);
 
@@ -73,10 +74,15 @@ public class GameProfile extends Fragment {
 
     public String getGameID() { return gameID; }
 
-    public void setProfile(String id, String name, String cover) {
-        this.id.setText(id);
-        this.name.setText(name);
-        new LoadImage(this.cover, "https://" + cover).execute();
+    public void setProfile(final FullGame game) {
+
+
+        this.getActivity().setTitle(game.name);
+
+        this.name.setText(game.name);
+        this.dsc.setText(game.summary);
+        new LoadImage(this.cover, "https://" + game.getCover()).execute();
+
     }
 
 }
