@@ -2,7 +2,6 @@ package com.github.jotask.gametracker.firebase;
 
 import android.os.Handler;
 import android.os.Message;
-import com.github.jotask.gametracker.igdb.DataModel;
 import com.github.jotask.gametracker.model.Game;
 import com.github.jotask.gametracker.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,9 +62,7 @@ public class FireBaseController {
 
     }
 
-    public void getAllFriends(final Handler handler) {
-
-        // OK
+    public void getAllUsers(final Handler handler) {
 
         final DatabaseReference ref = this.database.getReference( );
         ref.child(TABLES.USERS.name().toLowerCase())
@@ -76,20 +73,50 @@ public class FireBaseController {
                         if(!dataSnapshot.exists())
                             return;
 
-                        ArrayList<DataModel> result = new ArrayList<>();
+                        ArrayList<User> result = new ArrayList<>();
 
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                             User u = postSnapshot.getValue(User.class);
 
-                            DataModel dm = new DataModel(u.uid, u.name, u.photo);
-
-                            result.add(dm);
+                            result.add(u);
 
                         }
 
                         // Send the result to handle
                         Message msg = handler.obtainMessage(1, result);
+                        handler.sendMessage(msg);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) { }
+
+                });
+
+    }
+
+    public void getAllFriends(final Handler handler) {
+
+        final DatabaseReference ref = this.database.getReference( );
+        ref.child(TABLES.FRIENDS.name().toLowerCase())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if(!dataSnapshot.exists()) {
+                            return;
+                        }
+
+                        ArrayList<User> result = new ArrayList<>();
+
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            User u = postSnapshot.getValue(User.class);
+                            result.add(u);
+                        }
+
+                        // Send the result to handle
+                        Message msg = handler.obtainMessage(2, result);
                         handler.sendMessage(msg);
 
                     }
@@ -154,6 +181,15 @@ public class FireBaseController {
                 .child(game.id).setValue(game);
     }
 
+    public void subscribeToUser(final User user) {
+
+        final DatabaseReference ref = this.database.getReference();
+        ref.child(TABLES.FRIENDS.name().toLowerCase())
+                .child(this.user.getUid())
+                .child(user.uid).setValue(user);
+
+    }
+
 
     public void updateGameUser(final Game gameUser) {
         final DatabaseReference ref = this.database.getReference()
@@ -162,5 +198,6 @@ public class FireBaseController {
                 .child(gameUser.id);
         ref.setValue(gameUser);
     }
+
 
 }

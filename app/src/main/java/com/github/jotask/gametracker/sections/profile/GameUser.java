@@ -14,7 +14,9 @@ import com.github.jotask.gametracker.MainActivity;
 import com.github.jotask.gametracker.R;
 import com.github.jotask.gametracker.igdb.FullGame;
 import com.github.jotask.gametracker.model.Game;
+import com.github.jotask.gametracker.utils.DialogFactory;
 import com.github.jotask.gametracker.utils.LoadImage;
+import com.github.jotask.gametracker.utils.Utils;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -94,6 +96,9 @@ public class GameUser extends Fragment {
         final Button startBtn = getActivity().findViewById(R.id.game_user_startDate_btn);
         final Button endBtn = getActivity().findViewById(R.id.game_user_endDate_btn);
         final TextView completedIn = getActivity().findViewById(R.id.game_user_completedin);
+        final TextView completedWidth = getActivity().findViewById(R.id.game_user_ccompletedWidth);
+        final Button completedWidthBtn = getActivity().findViewById(R.id.game_user_ccompletedWidth_btn);
+        final LinearLayout completedWidthView = getActivity().findViewById(R.id.game_user_completedwith_view);
 
         swtch.setTextOn("YES");
         swtch.setTextOff("NO");
@@ -140,10 +145,18 @@ public class GameUser extends Fragment {
         });
 
         if(game.completed){
-            completedIn.setText(getDifferenceTime(game.start, game.end));
+            completedIn.setText(" Completed in " + Utils.getDifferenceTime(game.start, game.end));
         }else{
             completedIn.setVisibility(View.GONE);
+            completedWidthView.setVisibility(View.GONE);
         }
+
+        completedWidthBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFactory.addUser(main);
+            }
+        });
 
     }
 
@@ -224,14 +237,6 @@ public class GameUser extends Fragment {
     private String getDate(final long time){
         Date d = new Date(time);
         DateFormat f = new SimpleDateFormat("EEE, MMM d, ''yy");
-        return f.format(d);
-    }
-
-    private String getDifferenceTime(final long start, final long end){
-        // TODO
-        long time = end - start;
-        Date d = new Date(time);
-        DateFormat f = new SimpleDateFormat("d:h:m:s");
         return f.format(d);
     }
 

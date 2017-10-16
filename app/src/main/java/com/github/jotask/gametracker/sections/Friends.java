@@ -6,18 +6,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import com.github.jotask.gametracker.MainActivity;
 import com.github.jotask.gametracker.R;
 import com.github.jotask.gametracker.igdb.ApiSearch;
-import com.github.jotask.gametracker.igdb.DataModel;
-import com.github.jotask.gametracker.utils.CustomAdapter;
+import com.github.jotask.gametracker.model.User;
+import com.github.jotask.gametracker.utils.adapters.FriendsAdapter;
 
 import java.util.ArrayList;
 
@@ -25,13 +25,13 @@ public class Friends extends Fragment {
 
     private ListView listView;
 
-    private CustomAdapter adapter;
+    private FriendsAdapter adapter;
 
     private MainActivity main;
 
     private ApiSearch api;
 
-    private ArrayList<DataModel> models;
+    private ArrayList<User> users;
 
     public Handler handler;
     public View ftView;
@@ -48,7 +48,7 @@ public class Friends extends Fragment {
         this.main = (MainActivity) getActivity();
         this.api = main.getApi();
 
-        this.models = new ArrayList<>();
+        this.users = new ArrayList<>();
 
         LayoutInflater li = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ftView = li.inflate(R.layout.footer_view, null);
@@ -57,16 +57,16 @@ public class Friends extends Fragment {
 
         this.listView = getView().findViewById(R.id.search_result);
 
-        this.adapter = new CustomAdapter(this.getContext(), this.models);
+        this.adapter = new FriendsAdapter(this.getContext(), this.users);
         this.listView.setAdapter(this.adapter);
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Fragment fragment = GameProfile.newInstance(view.getTag().toString());
-                FragmentTransaction ft = main.getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_main, fragment);
-                ft.commit();
-                ft.addToBackStack(null);
+                User u = (User) adapter.getItem(position);
+                ImageView t = view.findViewById(R.id.item_info);
+                t.setImageResource(R.drawable.ic_menu_send);
+                main.getFirebase().subscribeToUser(u);
+                view.setClickable(false);
             }
         });
 
@@ -86,8 +86,7 @@ public class Friends extends Fragment {
             }
         });
 
-        // Load all my friends
-        main.getFirebase().getAllFriends(this.handler);
+        handler.sendEmptyMessage(0);
 
     }
 
@@ -102,14 +101,27 @@ public class Friends extends Fragment {
             switch (msg.what){
                 case 0:
                     // add loading viewduring searching
-                    listView.addFooterView(ftView);
+                    main.getFirebase().getAllUsers(handler);
+//                    listView.addFooterView(ftView);
                     break;
                 case 1:
                     // Update data adapter and ui
                     adapter.clearData();
-                    adapter.addData((ArrayList<DataModel>) msg.obj);
+                    adapter.addData((ArrayList<User>) msg.obj);
                     listView.removeFooterView(ftView);
                     isLoading = false;
+
+                    main.getFirebase().getAllFriends(this);
+
+                    break;
+                case 2:
+
+                    final ArrayList<User> friends = (ArrayList<User>) msg.obj;
+
+                    for(User f: friends){
+                        adapter.isFriend(f);
+                    }
+
                     break;
                 default:
                     break;

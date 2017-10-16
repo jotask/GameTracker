@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FireBaseController firebase;
     private FirebaseUser user;
 
+    final int initial = 1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.api = new ApiSearch(this);
         this.firebase = new FireBaseController();
 
-        onNavigationItemSelected(this.navigationView.getMenu().getItem(0));
+        onNavigationItemSelected(this.navigationView.getMenu().getItem(initial));
 
     }
 
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_library:
                 fragment = new Library();
                 break;
-            case R.id.nav_groups:
+            case R.id.nav_friends:
                 fragment = new Friends();
                 break;
             case R.id.nav_explore:

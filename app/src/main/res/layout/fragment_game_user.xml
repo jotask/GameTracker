@@ -193,27 +193,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    >
+                    android:id="@+id/game_user_completedwith_view">
+
                 <TextView
                         android:layout_weight="1"
                         android:textSize="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Facebook"
+                        android:text="Completed With"
                         android:textColor="#a2a1b8"
                         android:maxLength="12"
                         android:background="#0000"
                         android:padding="16dp"
                         android:gravity="left"
                         />
-                <Switch
-                        android:layout_weight="1"
+
+                <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:gravity="left"
-                        />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                    <TextView
+                            android:text="TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/game_user_ccompletedWidth"
+                            android:layout_weight="1"/>
+
+                    <Button
+                            android:text="Button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/game_user_ccompletedWidth_btn"
+                            android:layout_weight="1"/>
+                </LinearLayout>
+
             </LinearLayout>
+
             <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

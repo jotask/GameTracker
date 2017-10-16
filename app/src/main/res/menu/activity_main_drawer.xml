@@ -9,9 +9,9 @@
                 android:title="Library"
                 android:id="@+id/nav_library"/>
         <item
-                android:id="@+id/nav_groups"
+                android:id="@+id/nav_friends"
                 android:icon="?android:attr/actionModeCopyDrawable"
-                android:title="Groups"/>
+                android:title="Friends"/>
         <item
                 android:title="Explore"
                 android:id="@+id/nav_explore"

@@ -18,7 +18,8 @@ import com.github.jotask.gametracker.R;
 import com.github.jotask.gametracker.igdb.ApiSearch;
 import com.github.jotask.gametracker.igdb.DataModel;
 import com.github.jotask.gametracker.sections.profile.GameUser;
-import com.github.jotask.gametracker.utils.CustomAdapter;
+import com.github.jotask.gametracker.utils.adapters.CustomAdapter;
+import com.github.jotask.gametracker.utils.adapters.GamesAdapter;
 
 import java.util.ArrayList;
 
@@ -58,7 +59,7 @@ public class Library extends Fragment {
 
         this.listView = getView().findViewById(R.id.search_result);
 
-        this.adapter = new CustomAdapter(this.getContext(), this.models);
+        this.adapter = new GamesAdapter(this.getContext(), this.models);
         this.listView.setAdapter(this.adapter);
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
