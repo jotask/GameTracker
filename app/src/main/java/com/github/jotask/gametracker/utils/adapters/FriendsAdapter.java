@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class FriendsAdapter extends CustomAdapter<User> {
 
-    private HashMap<String, User> map;
+    private HashMap<String, Boolean> map;
 
     public FriendsAdapter(Context context, List<User> models) {
         super(context, models);
@@ -32,7 +32,7 @@ public class FriendsAdapter extends CustomAdapter<User> {
     public void addData(ArrayList<User> data) {
         super.addData(data);
         for(final User u: data){
-            this.map.put(u.uid, u);
+            this.map.put(u.uid, false);
         }
     }
 
@@ -47,6 +47,10 @@ public class FriendsAdapter extends CustomAdapter<User> {
 
         final User user = this.models.get(position);
 
+        if(this.map.containsKey(user.uid)){
+            state.setImageResource(R.drawable.ic_menu_send);
+        }
+
         name.setText(user.name);
 
         new LoadImage(cover, "https://" + user.photo).execute();
@@ -58,9 +62,7 @@ public class FriendsAdapter extends CustomAdapter<User> {
     }
 
     public void isFriend(final User friend){
-        if(map.containsKey(friend.uid)){
-
-        }
+        map.put(friend.uid, true);
     }
 
 }

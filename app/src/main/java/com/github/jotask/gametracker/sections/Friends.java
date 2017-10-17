@@ -118,9 +118,10 @@ public class Friends extends Fragment {
 
                     final ArrayList<User> friends = (ArrayList<User>) msg.obj;
 
-                    for(User f: friends){
+                    for(User f: friends)
                         adapter.isFriend(f);
-                    }
+
+                    adapter.notifyDataSetChanged();
 
                     break;
                 default:
