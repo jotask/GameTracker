@@ -1,5 +1,7 @@
 package com.github.jotask.gametracker.model;
 
+import java.util.ArrayList;
+
 /**
  * Game
  *
@@ -15,8 +17,8 @@ public class Game {
     public long start = -1;
     public long end = -1;
 
-    public Game() {
+    public ArrayList<User> playedWith = new ArrayList<>();
 
-    }
+    public Game() { }
 
 }

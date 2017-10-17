@@ -120,7 +120,7 @@ public class Library extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0:
-                    // add loading viewduring searching
+                    // add loading view during searching
                     listView.addFooterView(ftView);
                     break;
                 case 1:
@@ -129,10 +129,8 @@ public class Library extends Fragment {
                     adapter.addData((ArrayList<DataModel>) msg.obj);
                     listView.removeFooterView(ftView);
 
-                    System.out.println(((ArrayList<DataModel>) msg.obj).size() + " :::::::::::::::::::::::::::::::::::::::::::::::::");
-
-                    int id = 0;
-                    listView.performItemClick(listView.getAdapter().getView(id, null, null), id, listView.getItemIdAtPosition(id));
+//                    int id = 0;
+//                    listView.performItemClick(listView.getAdapter().getView(id, null, null), id, listView.getItemIdAtPosition(id));
 
                     isLoading = false;
                     break;

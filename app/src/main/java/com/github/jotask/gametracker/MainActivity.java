@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FireBaseController firebase;
     private FirebaseUser user;
 
-    final int initial = 1;
+    final int initial = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

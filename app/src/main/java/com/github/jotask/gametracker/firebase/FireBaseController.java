@@ -99,7 +99,7 @@ public class FireBaseController {
     public void getAllFriends(final Handler handler) {
 
         final DatabaseReference ref = this.database.getReference( );
-        ref.child(TABLES.FRIENDS.name().toLowerCase())
+        ref.child(TABLES.FRIENDS.name().toLowerCase()).child(this.user.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -112,6 +112,7 @@ public class FireBaseController {
 
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                             User u = postSnapshot.getValue(User.class);
+                            System.out.println("//////////////////////" + u);
                             result.add(u);
                         }
 
@@ -199,5 +200,17 @@ public class FireBaseController {
         ref.setValue(gameUser);
     }
 
+    public void gamePlayedWith(final Game game, final User u) {
+
+        game.playedWith.add(u);
+
+        final DatabaseReference ref = this.database.getReference()
+                .child(TABLES.GAMES.name().toLowerCase())
+                .child(this.user.getUid())
+                .child(game.id);
+
+        ref.setValue(game);
+
+    }
 
 }

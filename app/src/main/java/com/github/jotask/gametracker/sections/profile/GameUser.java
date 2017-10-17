@@ -14,6 +14,7 @@ import com.github.jotask.gametracker.MainActivity;
 import com.github.jotask.gametracker.R;
 import com.github.jotask.gametracker.igdb.FullGame;
 import com.github.jotask.gametracker.model.Game;
+import com.github.jotask.gametracker.model.User;
 import com.github.jotask.gametracker.utils.DialogFactory;
 import com.github.jotask.gametracker.utils.LoadImage;
 import com.github.jotask.gametracker.utils.Utils;
@@ -146,6 +147,24 @@ public class GameUser extends Fragment {
 
         if(game.completed){
             completedIn.setText(" Completed in " + Utils.getDifferenceTime(game.start, game.end));
+            System.out.println("++++++++++++++++ " + game.playedWith.size());
+
+            // TODO improve this
+            StringBuilder sb = new StringBuilder();
+
+            for(final User u: game.playedWith){
+                sb.append(u.name + " ,");
+            }
+
+            String tmp = sb.toString();
+            if(tmp.length() > 0) {
+                tmp = tmp.substring(0, tmp.length() - 1);
+            }else{
+                tmp = "Undefined";
+            }
+
+            completedWidth.setText(tmp);
+
         }else{
             completedIn.setVisibility(View.GONE);
             completedWidthView.setVisibility(View.GONE);
@@ -154,7 +173,7 @@ public class GameUser extends Fragment {
         completedWidthBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFactory.addUser(main);
+                DialogFactory.addUser(main, data);
             }
         });
 
