@@ -71,16 +71,16 @@ public class DialogFactory {
                 switch (msg.what){
                     case 0:
                         main.getFirebase().getAllFriends(this);
-                        System.out.println("***************************************** MSG 0");
+//                        System.out.println("***************************************** MSG 0");
                         break;
                     case 1:
-                        System.out.println("***************************************** MSG 1");
+//                        System.out.println("***************************************** MSG 1");
                         break;
                     case 2:
                         final ArrayList<User> friends = (ArrayList<User>) msg.obj;
                         adapter.clearData();
                         adapter.addData(friends);
-                        System.out.println("***************************************** MSG 2");
+//                        System.out.println("***************************************** MSG 2");
                         break;
                 }
             }

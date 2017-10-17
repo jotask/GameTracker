@@ -1,10 +1,8 @@
 package com.github.jotask.gametracker.igdb;
 
 import android.content.Context;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import com.android.volley.VolleyError;
 import com.github.jotask.gametracker.sections.GameProfile;
 import com.igdb.api_android_java.callback.onSuccessCallback;
@@ -14,10 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 /**
@@ -107,8 +101,6 @@ public class ApiSearch {
             @Override
             public void onSuccess(JSONArray result) {
 
-                System.out.println(result.toString());
-
                 for(int i = 0; i < result.length(); i++) {
 
                     JSONObject obj = null;
@@ -144,9 +136,8 @@ public class ApiSearch {
         wrapper.games(params, new onSuccessCallback(){
             @Override
             public void onSuccess(JSONArray obj) {
-                System.out.println(obj.toString());
 
-                save(obj.toString());
+//                save(obj.toString());
 
                 JSONObject data = null;
 
@@ -183,7 +174,7 @@ public class ApiSearch {
             @Override
             public void onSuccess(JSONArray obj) {
 
-                save(obj.toString());
+//                save(obj.toString());
 
                 JSONObject data = null;
 
@@ -214,62 +205,62 @@ public class ApiSearch {
     /** Method to check whether external media available and writable. This is adapted from
      http://developer.android.com/guide/topics/data/data-storage.html#filesExternal */
 
-    private void checkExternalMedia(){
-        boolean mExternalStorageAvailable = false;
-        boolean mExternalStorageWriteable = false;
-        String state = Environment.getExternalStorageState();
-
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            // Can read and write the media
-            mExternalStorageAvailable = mExternalStorageWriteable = true;
-
-            System.out.println("*********************************************" + "Can read and write the media");
-        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            // Can only read the media
-            mExternalStorageAvailable = true;
-            mExternalStorageWriteable = false;
-            System.out.println("*********************************************" + "Can only read the media");
-        } else {
-            // Can't read or write
-            mExternalStorageAvailable = mExternalStorageWriteable = false;
-            System.out.println("*********************************************" + "Can't read or write");
-        }
-    }
+//    private void checkExternalMedia(){
+//        boolean mExternalStorageAvailable = false;
+//        boolean mExternalStorageWriteable = false;
+//        String state = Environment.getExternalStorageState();
+//
+//        if (Environment.MEDIA_MOUNTED.equals(state)) {
+//            // Can read and write the media
+//            mExternalStorageAvailable = mExternalStorageWriteable = true;
+//
+//            System.out.println("*********************************************" + "Can read and write the media");
+//        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+//            // Can only read the media
+//            mExternalStorageAvailable = true;
+//            mExternalStorageWriteable = false;
+//            System.out.println("*********************************************" + "Can only read the media");
+//        } else {
+//            // Can't read or write
+//            mExternalStorageAvailable = mExternalStorageWriteable = false;
+//            System.out.println("*********************************************" + "Can't read or write");
+//        }
+//    }
 
     /** Method to write ascii text characters to file on SD card. Note that you must add a
      WRITE_EXTERNAL_STORAGE permission to the manifest file or this method will throw
      a FileNotFound Exception because you won't have write permission. */
 
-    private void save(String str){
-
-        checkExternalMedia();
-
-        // Create a path where we will place our private file on external
-        // storage.
-        File file = new File(ctx.getExternalFilesDir(null), "state.txt");
-
-        System.out.println(file.toString());
-
-        try {
-
-            FileOutputStream os = new FileOutputStream(file);
-            OutputStreamWriter out = new OutputStreamWriter(os);
-
-            out.write(str);
-            out.close();
-
-//            if(hasExternalStoragePrivateFile()) {
-//                Log.w("ExternalStorageFileCreation", "File Created");
-//            } else {
-//                Log.w("ExternalStorageFileCreation", "File Not Created");
-//            }
-
-        } catch (IOException e) {
-            // Unable to create file, likely because external storage is
-            // not currently mounted.
-            Log.w("ExternalStorage", "Error writing " + file, e);
-        }
-
-    }
+//    private void save(String str){
+//
+//        checkExternalMedia();
+//
+//        // Create a path where we will place our private file on external
+//        // storage.
+//        File file = new File(ctx.getExternalFilesDir(null), "state.txt");
+//
+//        System.out.println(file.toString());
+//
+//        try {
+//
+//            FileOutputStream os = new FileOutputStream(file);
+//            OutputStreamWriter out = new OutputStreamWriter(os);
+//
+//            out.write(str);
+//            out.close();
+//
+////            if(hasExternalStoragePrivateFile()) {
+////                Log.w("ExternalStorageFileCreation", "File Created");
+////            } else {
+////                Log.w("ExternalStorageFileCreation", "File Not Created");
+////            }
+//
+//        } catch (IOException e) {
+//            // Unable to create file, likely because external storage is
+//            // not currently mounted.
+//            Log.w("ExternalStorage", "Error writing " + file, e);
+//        }
+//
+//    }
 
 }

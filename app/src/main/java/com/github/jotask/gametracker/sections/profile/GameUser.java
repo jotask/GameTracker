@@ -65,13 +65,13 @@ public class GameUser extends Fragment {
         this.scrollView = getActivity().findViewById(R.id.scrollview_gameuser);
         this.photo = getActivity().findViewById(R.id.contactPic);
 
-        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ScrollPositionObserver());
+        this.scrollView.getViewTreeObserver().addOnScrollChangedListener(new ScrollPositionObserver());
 
         this.main = ((MainActivity) getActivity());
 
         this.handler = new GameUser.MyHandle();
 
-        handler.sendEmptyMessage(0);
+        this.handler.sendEmptyMessage(0);
 
     }
 
@@ -81,7 +81,7 @@ public class GameUser extends Fragment {
     }
 
     public void setData(final FullGame g) {
-        getActivity().setTitle(g.name);
+        this.getActivity().setTitle(g.name);
         new LoadImage(photo, "https://" + g.getCover(FullGame.SIZE.SCREENSHOT_MED)).execute();
     }
 
@@ -147,7 +147,6 @@ public class GameUser extends Fragment {
 
         if(game.completed){
             completedIn.setText(" Completed in " + Utils.getDifferenceTime(game.start, game.end));
-            System.out.println("++++++++++++++++ " + game.playedWith.size());
 
             // TODO improve this
             StringBuilder sb = new StringBuilder();

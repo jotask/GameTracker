@@ -18,11 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.jotask.gametracker.firebase.FireBaseController;
 import com.github.jotask.gametracker.igdb.ApiSearch;
-import com.github.jotask.gametracker.settings.SettingsActivity;
 import com.github.jotask.gametracker.sections.ExploreGames;
 import com.github.jotask.gametracker.sections.Friends;
-import com.github.jotask.gametracker.sections.GameProfile;
 import com.github.jotask.gametracker.sections.Library;
+import com.github.jotask.gametracker.settings.SettingsActivity;
 import com.github.jotask.gametracker.utils.LoadImage;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        }
         switch(id){
             case R.id.action_settings:
-                System.out.println("----------------------------------------------------2 ");
+//                System.out.println("----------------------------------------------------2 ");
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_logout:
@@ -165,16 +164,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    void setTest(){
-        String gameID = "1074";
-        Fragment fragment = GameProfile.newInstance(gameID);
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_main, fragment);
-        ft.commit();
-
     }
 
     public ApiSearch getApi() { return api; }

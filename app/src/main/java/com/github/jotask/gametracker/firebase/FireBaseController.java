@@ -112,7 +112,6 @@ public class FireBaseController {
 
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                             User u = postSnapshot.getValue(User.class);
-                            System.out.println("//////////////////////" + u);
                             result.add(u);
                         }
 
@@ -146,8 +145,6 @@ public class FireBaseController {
                         game.id = gameId;
 
                         ref.setValue(game);
-
-                        System.out.println("********** created because doesm't exist");
 
                     }else{
 
